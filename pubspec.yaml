@@ -14,13 +14,18 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+  http: ^1.2.1
   meta: ^1.12.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  test:
+  mockito: ^5.4.4
+  faker:
 
   flutter_lints: ^3.0.0
+  build_runner: ^2.4.11
 
 flutter:
   uses-material-design: true
