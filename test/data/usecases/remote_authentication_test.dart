@@ -20,10 +20,14 @@ Map<String, dynamic> makeSut() {
   };
 }
 
+AuthenticationParams makeParams() {
+  return AuthenticationParams(
+      email: faker.internet.email(), password: faker.internet.password());
+}
+
 void main() {
   test('Should call HttpClient with correct values', () async {
-    final params = AuthenticationParams(
-        email: faker.internet.email(), password: faker.internet.password());
+    final params = makeParams();
     final setUp = makeSut();
     await setUp['sut'].auth(params);
 
@@ -34,8 +38,7 @@ void main() {
   });
 
   test('Should throw UnexpectedError if HttpClient returns 400', () async {
-    final params = AuthenticationParams(
-        email: faker.internet.email(), password: faker.internet.password());
+    final params = makeParams();
     final setUp = makeSut();
 
     when(setUp['httpClient'].request(
