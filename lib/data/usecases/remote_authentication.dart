@@ -1,3 +1,4 @@
+import 'package:flutter_application_1/data/models/models.dart';
 import 'package:flutter_application_1/domain/entities/entities.dart';
 import 'package:flutter_application_1/domain/usecases/usecases.dart';
 import 'package:flutter_application_1/domain/helpers/helpers.dart';
@@ -17,8 +18,8 @@ class RemoteAuthentication {
       if (response == null) {
         throw HttpError.unauthorized;
       }
-      AccountEntity account = AccountEntity.fromJson(response);
-      return account;
+      RemoteAccountModel account = RemoteAccountModel.fromJson(response);
+      return account.toEntity();
     } on HttpError catch (error) {
       error == HttpError.unauthorized
           ? throw DomainError.invalidCredentials
