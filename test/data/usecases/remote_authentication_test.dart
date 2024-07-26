@@ -29,6 +29,17 @@ void main() {
   test('Should call HttpClient with correct values', () async {
     final params = makeParams();
     final setUp = makeSut();
+
+    final answer = {
+      'accessToken': faker.guid.guid(),
+      'name': faker.person.name()
+    };
+    when(setUp['httpClient'].request(
+      url: setUp['url'],
+      method: 'post',
+      body: {'email': params.email, 'password': params.password},
+    )).thenAnswer((_) async => answer);
+
     await setUp['sut'].auth(params);
 
     verify(setUp['httpClient'].request(
@@ -96,5 +107,24 @@ void main() {
     final future = setUp['sut'].auth(params);
 
     expect(future, throwsA(DomainError.unexpected));
+  });
+
+  test('Should return an Account if HttpClient returns 200', () async {
+    final params = makeParams();
+    final setUp = makeSut();
+
+    final answer = {
+      'accessToken': faker.guid.guid(),
+      'name': faker.person.name()
+    };
+    when(setUp['httpClient'].request(
+      url: setUp['url'],
+      method: 'post',
+      body: {'email': params.email, 'password': params.password},
+    )).thenAnswer((_) async => answer);
+
+    final account = await setUp['sut'].auth(params);
+
+    expect(account.token, answer['accessToken']);
   });
 }
