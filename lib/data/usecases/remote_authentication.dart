@@ -24,6 +24,8 @@ class RemoteAuthentication {
       error == HttpError.unauthorized
           ? throw DomainError.invalidCredentials
           : throw DomainError.unexpected;
+    } catch (error) {
+      throw DomainError.unexpected;
     }
   }
 }

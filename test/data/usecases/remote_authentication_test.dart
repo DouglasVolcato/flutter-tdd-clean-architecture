@@ -30,15 +30,12 @@ void main() {
     final params = makeParams();
     final setUp = makeSut();
 
-    final answer = {
-      'accessToken': faker.guid.guid(),
-      'name': faker.person.name()
-    };
     when(setUp['httpClient'].request(
       url: setUp['url'],
       method: 'post',
       body: {'email': params.email, 'password': params.password},
-    )).thenAnswer((_) async => answer);
+    )).thenAnswer((_) async =>
+        {'accessToken': faker.guid.guid(), 'name': faker.person.name()});
 
     await setUp['sut'].auth(params);
 
@@ -126,5 +123,22 @@ void main() {
     final account = await setUp['sut'].auth(params);
 
     expect(account.token, answer['accessToken']);
+  });
+
+  test(
+      'Should throw UnexpectedError if HttpClient returns 200 with invalid data',
+      () async {
+    final params = makeParams();
+    final setUp = makeSut();
+
+    when(setUp['httpClient'].request(
+      url: setUp['url'],
+      method: 'post',
+      body: {'email': params.email, 'password': params.password},
+    )).thenAnswer((_) async => {'invalidKey': faker.guid.guid()});
+
+    final future = setUp['sut'].auth(params);
+
+    expect(future, throwsA(DomainError.unexpected));
   });
 }
